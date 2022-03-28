@@ -1,7 +1,7 @@
 import { postData } from "../services/requests";
 
 
-const forms = () => {
+const forms = (state) => {
 
     const form = document.querySelectorAll('form'),
         inputs = document.querySelectorAll('input'),
@@ -46,7 +46,6 @@ const forms = () => {
         });
     });
 
-
     form.forEach(item => {
         item.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -70,9 +69,14 @@ const forms = () => {
             statusMessage.appendChild(textMessage);
 
             const formData = new FormData(item);
+            if (item.getAttribute('data-calc') === 'end') {
+                for(let key in state) {
+                    formData.append(key, state[key] );
+                }
+            }
             let api;
             item.closest('.popup-design') || item.classList.contains('calc_form') ? api = path.designer : api = path.question;
-            console.log(api);
+            // console.log(api);
 
             postData(api, formData)
                 .then(res => {
